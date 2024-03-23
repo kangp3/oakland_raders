@@ -1,8 +1,42 @@
 pub struct Pt(f64, f64, f64);
 
-pub struct Sphere;
+impl Pt {
+    pub fn origin() -> Self {
+        Pt(0.0, 0.0, 0.0)
+    }
+}
 
-pub struct Ray;
+pub struct Sphere {
+    c: Pt,
+    r: f64,
+}
+
+impl Sphere {
+    pub fn new(c: Pt, r: f64) -> Self {
+        Sphere { c, r }
+    }
+}
+
+pub struct Ray {
+    o: Pt,
+    p: Pt,
+}
+
+impl Ray {
+    pub fn from_origin(p: Pt) -> Self {
+        Ray { o: Pt::origin(), p }
+    }
+
+    pub fn hits(&self, s: &Sphere) -> bool {
+        //                            (PxCx + PyCy + PzCz) ^2
+        // R^2 >= Cx^2 + Cy^2 + Cz^2 - -----------------------
+        //                              Px^2 + Py^2 + Pz^2
+        let denom = self.p.0 * self.p.0 + self.p.1 * self.p.1 + self.p.2 * self.p.2;
+        s.r * s.r * denom >=
+            (s.c.0 * s.c.0 + s.c.1 * s.c.1 + s.c.2 * s.c.2) * denom -
+            (s.c.0 * self.p.0 + s.c.1 * self.p.1 + s.c.2 * self.p.2).powi(2)
+    }
+}
 
 #[cfg(test)]
 mod tests {
