@@ -1,6 +1,10 @@
 pub struct Pt(f64, f64, f64);
 
 impl Pt {
+    pub fn new(x: f64, y: f64, z: f64) -> Self {
+        Pt(x, y, z)
+    }
+
     pub fn origin() -> Self {
         Pt(0.0, 0.0, 0.0)
     }
