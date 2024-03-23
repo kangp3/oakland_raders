@@ -1,6 +1,8 @@
 use std::path::Path;
 use image::{RgbImage, Rgb};
 
+pub mod geometry;
+
 fn main() {
     let mut img = RgbImage::new(500, 500);
 
