@@ -1,16 +1,19 @@
+use image::RgbImage;
 use std::path::Path;
-use image::{RgbImage, Rgb};
 
-use oakland_raders::geometry;
-use oakland_raders::scene;
+use oakland_raders::geometry::{Pt, Sphere};
+use oakland_raders::scene::Scene;
 
 fn main() {
-    let mut img = RgbImage::new(500, 500);
-    let sphere = geometry::Sphere::new(geometry::Pt::new(0.0, 0.0, 0.0), 1.0);
+    let mut scene = Scene::new();
+    scene.add_obj(Sphere::new(Pt::new(0.0, 0.0, 500.0), 100.0));
+    let capture = scene.capture(500, 300);
+
+    let mut img = RgbImage::new(500, 300);
 
     for x in 0..500 {
-        for y in 0..500 {
-            img.put_pixel(x, y, Rgb([0, (x/2).try_into().unwrap(), (y/2).try_into().unwrap()]));
+        for y in 0..300 {
+            img.put_pixel(x, y, capture.get_pixel((x.try_into().unwrap(), y.try_into().unwrap())));
         }
     }
 
