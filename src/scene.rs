@@ -25,10 +25,27 @@ impl<'a> Scene<'a> {
             for y in 0..y_dim {
                 let p = Pt::new(x as f64 - x_bound, y as f64 - y_bound, viewport_distance);
                 let ray = Ray::from_origin(p);
+
+                let mut min_distance = f64::INFINITY;
+                let mut closest = None;
                 for obj in &self.objs {
-                    if obj.as_ref().intersects(&ray) {
-                        capture.set_pixel((x, y), Rgb([255, 255, 255]));
+                    let dist = obj.as_ref().intersects_at(&ray).first().unwrap_or(&Pt::infinity()).mag();
+                    if x == 246 && y == 143 {
+                        println!("DIST IS: {:?}", dist);
+                        println!("FOR OBJ: {:?}", obj);
                     }
+                    if dist < min_distance {
+                        min_distance = dist;
+                        closest = Some(obj.as_ref());
+                    }
+                }
+                if x == 246 && y == 143 {
+                    println!("RAY IS: {:?}", ray);
+                    println!("CLOSEST IS: {:?}", closest);
+                }
+                if let Some(obj) = closest {
+                    let lum = obj.get_luminosity();
+                    capture.set_pixel((x, y), Rgb([lum, lum, lum]));
                 }
             }
         }
@@ -61,12 +78,41 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_renders_sphere() {
+    fn it_renders_luminous_sphere() {
         let mut scene = Scene::new();
-        scene.add_obj(Sphere::new(Pt::new(0.0, 0.0, 500.0), 100.0));
+        scene.add_obj({
+            let mut sphere = Sphere::new(Pt::new(0.0, 0.0, 1000.0), 100.0);
+            sphere.set_lum(255);
+            sphere
+        });
 
         let capture = scene.capture(500, 300);
         assert_eq!(capture.get_pixel((250, 150)), Rgb([255, 255, 255])); // Center of sphere is white
+        assert_eq!(capture.get_pixel((450, 250)), Rgb([0, 0, 0])); // Edge of capture is black
+    }
+
+    #[test]
+    fn it_renders_nonluminous_sphere() {
+        let mut scene = Scene::new();
+        scene.add_obj(Sphere::new(Pt::new(0.0, 0.0, 1000.0), 100.0));
+
+        let capture = scene.capture(500, 300);
+        assert_eq!(capture.get_pixel((250, 150)), Rgb([10, 10, 10])); // Center of sphere is gray
+        assert_eq!(capture.get_pixel((450, 250)), Rgb([0, 0, 0])); // Edge of capture is black
+    }
+
+    #[test]
+    fn nonluminous_occludes_luminous_sphere() {
+        let mut scene = Scene::new();
+        scene.add_obj({
+            let mut sphere = Sphere::new(Pt::new(0.0, 0.0, 2000.0), 100.0);
+            sphere.set_lum(255);
+            sphere
+        });
+        scene.add_obj(Sphere::new(Pt::new(0.0, 0.0, 1000.0), 100.0));
+
+        let capture = scene.capture(500, 300);
+        assert_eq!(capture.get_pixel((250, 150)), Rgb([10, 10, 10])); // Center of sphere is gray
         assert_eq!(capture.get_pixel((450, 250)), Rgb([0, 0, 0])); // Edge of capture is black
     }
 }
