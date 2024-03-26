@@ -6,7 +6,7 @@ use oakland_raders::scene::Scene;
 
 fn main() {
     let mut scene = Scene::new();
-    scene.add_obj(Sphere::new(Pt::new(100.0, 200.0, 5000.0), 200.0));
+    scene.add_obj(Sphere::new(Pt::new(100.0, 200.0, 5000.0), 500.0));
     scene.add_obj(Sphere::new(Pt::new(-50.0, -100.0, 5000.0), 100.0));
     let capture = scene.capture(500, 300);  // TODO: Refactor dimensions
     // TODO: Bouncing
