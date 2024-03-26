@@ -35,15 +35,6 @@ impl Pt {
     }
 }
 
-pub struct Sphere {
-    c: Pt,           // Center
-    r: f64,          // Radius
-    color: Rgb<u8>,  // Color
-    lum: u8,         // Luminosity
-    spec: u8,        // Specular reflection
-    diff: u8,        // Diffuse reflection
-}
-
 pub struct Ray {
     o: Pt,
     p: Pt,
@@ -57,6 +48,15 @@ impl Ray {
     pub fn from_origin(p: Pt) -> Self {
         Ray { o: Pt::zero(), p }
     }
+}
+
+pub struct Sphere {
+    c: Pt,           // Center
+    r: f64,          // Radius
+    color: Rgb<u8>,  // Color
+    lum: u8,         // Luminosity
+    spec: u8,        // Specular reflection
+    diff: u8,        // Diffuse reflection
 }
 
 impl Sphere {
