@@ -20,7 +20,7 @@ impl<'a> Scene<'a> {
         let x_bound = x_dim as f64 / 2.0;
         let y_bound = y_dim as f64 / 2.0;
 
-        let viewport_distance = 100.0;
+        let viewport_distance = 500.0;
         for x in 0..x_dim {
             for y in 0..y_dim {
                 let p = Pt::new(x as f64 - x_bound, y as f64 - y_bound, viewport_distance);
