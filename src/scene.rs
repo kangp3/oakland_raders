@@ -30,18 +30,10 @@ impl<'a> Scene<'a> {
                 let mut closest = None;
                 for obj in &self.objs {
                     let dist = obj.as_ref().intersects_at(&ray).first().unwrap_or(&Pt::infinity()).mag();
-                    if x == 246 && y == 143 {
-                        println!("DIST IS: {:?}", dist);
-                        println!("FOR OBJ: {:?}", obj);
-                    }
                     if dist < min_distance {
                         min_distance = dist;
                         closest = Some(obj.as_ref());
                     }
-                }
-                if x == 246 && y == 143 {
-                    println!("RAY IS: {:?}", ray);
-                    println!("CLOSEST IS: {:?}", closest);
                 }
                 if let Some(obj) = closest {
                     let lum = obj.get_luminosity();
