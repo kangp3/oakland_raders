@@ -1,6 +1,6 @@
 use image::Rgb;
 
-use crate::geometry::{Pt, Ray, Renderable, Sphere};
+use crate::geometry::{Pt, Ray, Renderable};
 
 pub struct Scene<'a> {
     objs: Vec<Box<dyn Renderable + 'a>>,
@@ -68,6 +68,7 @@ impl Capture {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::geometry::Sphere;
 
     #[test]
     fn it_renders_luminous_sphere() {
